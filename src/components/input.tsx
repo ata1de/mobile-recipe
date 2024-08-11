@@ -23,8 +23,8 @@ function Field ({...props}: TextInputProps) {
     return <TextInput
     className="flex-1 text-rose-950 text-lg font-regular pb-1"
     placeholderTextColor={colors.zinc[400]}
-    cursorColor={colors.zinc[100]}
-    selectionColor={Platform.OS === 'ios' ? colors.zinc[100] : undefined}
+    cursorColor={colors.rose[950]}
+    selectionColor={Platform.OS === 'ios' ? colors.rose[900] : undefined}
     {...props}
     />
 }
