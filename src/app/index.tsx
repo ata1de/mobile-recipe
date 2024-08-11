@@ -10,14 +10,14 @@ export default function Index() {
             </View>
 
             <View className='flex-1 mt-5 z-10 rounded-t-xl justify-start items-center gap-12'>  
-                <Text className='text-center text-3xl font-bold'>Welcome to AmigoKitchen</Text>
+                <Text className='text-center text-3xl font-bold'>Welcome to <Text className='gradient-text'>AmigoKitchen</Text></Text>
 
-                <View className='max-w-[80%] items-start gap-3'>
+                <View className='w-[300px] items-start gap-3'>
                     <Text className='text-xl font-semibold'>Whats your name?</Text>
                     <Input>
                         <Input.Field placeholder='Enter your name'></Input.Field>
                     </Input>
-                    <Button className='flex-row w-full'>
+                    <Button className='w-full'>
                         <Button.Title>Continue</Button.Title>
                     </Button>
 
