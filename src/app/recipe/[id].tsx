@@ -1,13 +1,13 @@
 import { Loading } from "@/components/loading";
 import { Recipe, recipeServer } from "@/server/recipeServer";
-import getFavoritesStorage from "@/storage/getFavorites";
+import { useAppDispatch, useAppSelector } from "@/store/hooks/hooks";
 import { addFavorite, removeFavorite } from "@/store/slices/favoriteRecipesSlice";
+import { addRecent } from "@/store/slices/recentViewerSlice";
 import { colors } from "@/styles/colors";
 import { router, useLocalSearchParams } from "expo-router";
 import { ArrowLeft, BicepsFlexed, Clock, Droplet, Heart } from "lucide-react-native";
 import { useEffect, useState } from "react";
 import { Image, Pressable, Text, View } from "react-native";
-import { useDispatch } from "react-redux";
 
 interface RecipeProps {
     recipe: Recipe
@@ -18,7 +18,9 @@ export default function RecipeDetails() {
     const id = useLocalSearchParams<{ id: string}>().id
 
     //REDUX
-    const dispatch = useDispatch()
+    const dispatch = useAppDispatch()
+    const favorites = useAppSelector((state) => state.favorites.favoriteRecipes)
+
     //STATE
     const [recipe, setRecipe] = useState<Recipe>()
     const [isFavorite, setIsFavorite] = useState(false)
@@ -55,7 +57,6 @@ export default function RecipeDetails() {
 
     const loadFavorites = async () => {
         try {
-            const favorites = await getFavoritesStorage();
             
             if (favorites.find((fav) => fav.id == Number(id))) {
                 setIsFavorite(true);
@@ -68,12 +69,20 @@ export default function RecipeDetails() {
         }
     };
 
+    function addRecentView(recipe: Recipe) {
+        if (recipe){
+            dispatch(addRecent(recipe))
+        }
+    }
+
     useEffect(() => {
         getRecipe()
         loadFavorites()
     }, [id])
 
     if (recipeLoading || !recipe || isFavoriteLoading) {
+        addRecentView(recipe!)
+
         return <Loading/>
     }
 

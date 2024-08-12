@@ -3,17 +3,16 @@ import { Loading } from "@/components/loading";
 import { RecommendationRecipe } from "@/components/recommendationRecipe";
 import { categories } from "@/data/categories";
 import { Recipe, recipeServer } from "@/server/recipeServer";
-import { UserState } from "@/store/slices/userSlice";
+import { useAppSelector } from "@/store/hooks/hooks";
 import { colors } from "@/styles/colors";
 import { router } from "expo-router";
 import { Search } from "lucide-react-native";
 import { useEffect, useState } from "react";
 import { Alert, FlatList, Image, ScrollView, Text, View } from "react-native";
-import { useSelector } from "react-redux";
 
 export default function Main() {
     //REDUX
-    const userName = useSelector((state: UserState) => state.user.name)
+    const userName = useAppSelector((state) => state.user.name)
 
     //LOADING
     const [newestLoading, setNewestLoading] = useState(true)

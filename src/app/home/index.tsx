@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Text, View } from "react-native";
+import { View } from "react-native";
 
 import { Button } from "@/components/button";
 
@@ -8,6 +8,7 @@ import { HomeIcon, Plus, TextSearch } from 'lucide-react-native';
 
 
 import { colors } from "@/styles/colors";
+import Info from "./info";
 import Main from "./main";
 
 export default function Home() {
@@ -20,11 +21,11 @@ export default function Home() {
                 options === 'home' ? (
                     <Main />
                 ) : (
-                    <Text>Search</Text>
+                    <Info />
                 )
             }
 
-            <View className="w-full absolute -bottom-1 self-center justify-end z-10 bg-zinc-950">
+            <View className="w-full absolute -bottom-1 self-center justify-end z-10">
                 <View className="w-full flex-row bg-[#feebea] self-center border-zinc-300 gap-2 p-4 rounded-lg">
                     <Button 
                     className="flex-1 rounded-lg "

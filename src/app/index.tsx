@@ -7,17 +7,17 @@ import { Alert, Image, Keyboard, KeyboardAvoidingView, Platform, Text, Touchable
 
 import { Loading } from '@/components/loading'
 import getUserNameFromStorage from '@/storage/getUserName'
-import { setUserName, UserState } from '@/store/slices/userSlice'
+import { useAppDispatch, useAppSelector } from '@/store/hooks/hooks'
+import { setUserName } from '@/store/slices/userSlice'
 import { router } from 'expo-router'
-import { useDispatch, useSelector } from 'react-redux'
 
 
 
 export default function Index() {
 
     //REDUX 
-    const dispatch = useDispatch()  
-    const userName = useSelector((state: UserState) => state.user.name)
+    const dispatch = useAppDispatch()  
+    const userName = useAppSelector((state) => state.user.name)
     const [name, setName] = useState(userName)
 
     //STATES
