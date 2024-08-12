@@ -1,5 +1,6 @@
 import { Input } from "@/components/input";
 import { Loading } from "@/components/loading";
+import { RecommendationRecipe } from "@/components/recommendationRecipe";
 import { categories } from "@/data/categories";
 import { Recipe, recipeServer } from "@/server/recipeServer";
 import { UserState } from "@/store/slices/userSlice";
@@ -21,7 +22,6 @@ export default function Home() {
     async function getNewestRecipes() {
         try {
             const newest = await recipeServer.getTop5NewRecipes()
-            console.log(newest)
             setRecentRecipes(newest!)
         } catch (error) {
             console.log('error in get newest recipes',error)
@@ -43,7 +43,7 @@ export default function Home() {
             <View className="justify-center items-center">
                 <View className="my-5 flex-row w-full justify-between items-center">
                     <View className="items-start gap-2 max-w-[200px]">
-                        <Text className="text-zinc-400 text-sm font-light">Hello, <Text className="text-red-500">{userName}</Text></Text>
+                        <Text className="text-zinc-500 text-sm font-light">Hello, <Text className="text-red-500">{userName}</Text></Text>
                         <Text className="text-2xl font-bold leading-7 text-red-950">What would you like to cook today?</Text>
                     </View>
 
@@ -62,7 +62,7 @@ export default function Home() {
                     horizontal
                     contentContainerClassName="flex-row gap-3 mt-4 flex-row justify-start overflow-scroll"
                     renderItem={({ item }) => (
-                        <View className="flex-col p-3 gap-2 border border-red-300 justify-center items-center w-[90px] max-h-[100px] rounded-lg">
+                        <View className="flex-col p-3 gap-2 border border-red-100 justify-center items-center w-[90px] max-h-[100px] rounded-lg">
                             <Image 
                                 source={item.imgUrl} 
                                 style={{width: 50, height: 50}}
@@ -70,28 +70,21 @@ export default function Home() {
                             />
                             <Text className="text-sm font-semibold">{item.name}</Text>
                         </View>
+                    )}
+                />
+
+                <Text className="text-2xl mt-2 text-left font-bold text-red-950">Recent Recipes</Text>
+                <FlatList 
+                    data={recentRecipes}
+                    horizontal
+                    contentContainerClassName="flex-row gap-3 mt-4 flex-row justify-start overflow-scroll"
+                    renderItem={({ item }) => (
+                        <RecommendationRecipe {...item} />
                     )}
                 />
             </View>
 
-            <View className="flex-1">
-                <Text className="text-2xl text-left font-bold text-red-950">Recent Recipes</Text>
-                <FlatList 
-                    data={categories}
-                    horizontal
-                    contentContainerClassName="flex-row gap-3 mt-4 flex-row justify-start overflow-scroll"
-                    renderItem={({ item }) => (
-                        <View className="flex-col p-3 gap-2 border border-red-300 justify-center items-center w-[90px] max-h-[100px] rounded-lg">
-                            <Image 
-                                source={item.imgUrl} 
-                                style={{width: 50, height: 50}}
-                                resizeMode="cover" 
-                            />
-                            <Text className="text-sm font-semibold">{item.name}</Text>
-                        </View>
-                    )}
-                />
-            </View>
+            
         </View>
     )
 }
