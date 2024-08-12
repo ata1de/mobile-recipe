@@ -5,9 +5,10 @@ import { categories } from "@/data/categories";
 import { Recipe, recipeServer } from "@/server/recipeServer";
 import { UserState } from "@/store/slices/userSlice";
 import { colors } from "@/styles/colors";
+import { router } from "expo-router";
 import { Search } from "lucide-react-native";
 import { useEffect, useState } from "react";
-import { FlatList, Image, ScrollView, Text, View } from "react-native";
+import { Alert, FlatList, Image, ScrollView, Text, View } from "react-native";
 import { useSelector } from "react-redux";
 
 export default function Main() {
@@ -19,6 +20,7 @@ export default function Main() {
 
     //DATA
     const [recentRecipes, setRecentRecipes] = useState<Recipe[]>([])
+    const [searchName, setSearchName] = useState('')
 
     //FUNCTIONS 
     async function getNewestRecipes() {
@@ -30,6 +32,23 @@ export default function Main() {
             throw new Error
         } finally {
             setNewestLoading(false)
+        }
+    }
+
+    async function handleSubmit() {
+        try {
+            if (searchName.length === 0) {
+                return Alert.alert('Campo vazio', 'Digite algo para pesquisar')
+            }
+            
+            // Navegar para a nova página
+            router.push({
+                pathname: `/search/${searchName}` as any,  // Cast para "any" ou "string"
+            });
+            
+            
+        } catch (error) {
+            console.log('Error in search', error)
         }
     }
 
@@ -55,7 +74,12 @@ export default function Main() {
 
                 <Input className="gap-2">
                     <Search color={colors.red[900]} size={20} />
-                    <Input.Field placeholder="Search for recipes" />
+                    <Input.Field 
+                    placeholder="Search for recipes"
+                    value={searchName}
+                    onChangeText={setSearchName}
+                    onSubmitEditing={handleSubmit}
+                    />
                 </Input>
             </View>
 

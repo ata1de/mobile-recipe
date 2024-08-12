@@ -14,7 +14,7 @@ export interface Recipe {
 
 type RecipeCreationAttributes = Omit<Recipe, 'id'>
 
-interface RecipeByCategoryAndName {
+export interface RecipeByCategoryAndName {
     recipes: Recipe[],
     totalRecipes: number
 }
