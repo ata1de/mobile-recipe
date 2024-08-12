@@ -1,6 +1,6 @@
 import { api } from "./api";
 
-interface Recipe {
+export interface Recipe {
     id: number;
     title: string;
     description: string;
@@ -72,7 +72,7 @@ async function getTop5NewRecipes() {
 
         return recipes.data.newest
     } catch (error) {
-        
+        console.log('Error getting top 5 new recipes:', error)
     }
 }
 
