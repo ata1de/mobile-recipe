@@ -6,6 +6,7 @@ import {
   persistStore
 } from 'redux-persist';
 
+import favoriteRecipesSlice from './slices/favoriteRecipesSlice';
 import userReducer from './slices/userSlice';
 
 const persistConfig = {
@@ -14,10 +15,13 @@ const persistConfig = {
 };
 
 const persistedUserReducer = persistReducer(persistConfig, userReducer);
+const persistedFavoritesReducer = persistReducer(persistConfig, favoriteRecipesSlice);
+
 
 export const store = configureStore({
   reducer: {
     user: persistedUserReducer,
+    favorites: persistedFavoritesReducer,
   },
   middleware: (getDefaultMiddleware) => getDefaultMiddleware  ({
     serializableCheck: false, // Desabilitando verificação de serializabilidade
