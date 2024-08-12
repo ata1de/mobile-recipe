@@ -1,87 +1,65 @@
-import { Input } from "@/components/input";
-import { Loading } from "@/components/loading";
-import { RecommendationRecipe } from "@/components/recommendationRecipe";
-import { categories } from "@/data/categories";
-import { Recipe, recipeServer } from "@/server/recipeServer";
-import { UserState } from "@/store/slices/userSlice";
-import { useEffect, useState } from "react";
-import { FlatList, Image, Text, View } from "react-native";
-import { useSelector } from "react-redux";
+import { useState } from "react";
+import { Text, View } from "react-native";
+
+import { Button } from "@/components/button";
+
+
+import { HomeIcon, Plus, TextSearch } from 'lucide-react-native';
+
+
+import { colors } from "@/styles/colors";
+import Main from "./main";
 
 export default function Home() {
-    //REDUX
-    const userName = useSelector((state: UserState) => state.user.name)
-
-    //LOADING
-    const [newestLoading, setNewestLoading] = useState(true)
-
     //DATA
-    const [recentRecipes, setRecentRecipes] = useState<Recipe[]>([])
-
-    //FUNCTIONS 
-    async function getNewestRecipes() {
-        try {
-            const newest = await recipeServer.getTop5NewRecipes()
-            setRecentRecipes(newest!)
-        } catch (error) {
-            console.log('error in get newest recipes',error)
-            throw new Error
-        } finally {
-            setNewestLoading(false)
-        }
-    }
-
-    useEffect(() => {
-        getNewestRecipes()
-    }, [])
-
-    if (newestLoading) {
-        return <Loading/>
-    }
+    const [ options, setOptions ] = useState<'home' | 'search'>('home')
+    
     return (
-        <View className="bg-[#FFFCFC] flex-1 justify-center p-7">
-            <View className="justify-center items-center">
-                <View className="my-5 flex-row w-full justify-between items-center">
-                    <View className="items-start gap-2 max-w-[200px]">
-                        <Text className="text-zinc-500 text-sm font-light">Hello, <Text className="text-red-500">{userName}</Text></Text>
-                        <Text className="text-2xl font-bold leading-7 text-red-950">What would you like to cook today?</Text>
-                    </View>
+        <View className="bg-[#FFFCFC] flex-1 justify-center">
+            {
+                options === 'home' ? (
+                    <Main />
+                ) : (
+                    <Text>Search</Text>
+                )
+            }
 
-                    <Image source={require('../../../assets/favicon.png')} className="rounded-full w-16 h-16" />
+            <View className="w-full absolute -bottom-1 self-center justify-end z-10 bg-zinc-950">
+                <View className="w-full flex-row bg-[#feebea] self-center border-zinc-300 gap-2 p-4 rounded-lg">
+                    <Button 
+                    className="flex-1 rounded-lg "
+                    
+                    onPress={() => setOptions('home')}
+                    >
+                        
+                        <HomeIcon
+                        color={options === 'home' ? colors.red[950] : colors.zinc[500]}
+                        size={28}
+                        />
+                    </Button>
+
+                    <Button
+                    // className="absolute bottom-10 left-[155px] z-10 self-center justify-end rounded-full"
+                    className="flex-1 rounded-lg"
+                    variant="secondary"
+                    >
+                        <Plus   
+                        color={colors.zinc[200]}
+                        size={28}
+                        />
+                    </Button>
+
+                    <Button 
+                    className="flex-1 rounded-lg "
+                    
+                    onPress={() => setOptions('search')}
+                    >
+                        <TextSearch 
+                        color={options === 'search' ? colors.red[950] : colors.zinc[500]}
+                        size={28}
+                        />
+                    </Button>
                 </View>
-
-                <Input>
-                    <Input.Field placeholder="Search for recipes" />
-                </Input>
-            </View>
-
-            <View className="flex-1 mt-5">
-                <Text className="text-2xl text-left font-bold text-red-950">Categories</Text>
-                <FlatList
-                    data={categories}
-                    horizontal
-                    contentContainerClassName="flex-row gap-3 mt-4 flex-row justify-start overflow-scroll"
-                    renderItem={({ item }) => (
-                        <View className="flex-col p-3 gap-2 border border-red-100 justify-center items-center w-[90px] max-h-[100px] rounded-lg">
-                            <Image 
-                                source={item.imgUrl} 
-                                style={{width: 50, height: 50}}
-                                resizeMode="cover" 
-                            />
-                            <Text className="text-sm font-semibold">{item.name}</Text>
-                        </View>
-                    )}
-                />
-
-                <Text className="text-2xl mt-2 text-left font-bold text-red-950">Recent Recipes</Text>
-                <FlatList 
-                    data={recentRecipes}
-                    horizontal
-                    contentContainerClassName="flex-row gap-3 mt-4 flex-row justify-start overflow-scroll"
-                    renderItem={({ item }) => (
-                        <RecommendationRecipe {...item} />
-                    )}
-                />
             </View>
 
             
