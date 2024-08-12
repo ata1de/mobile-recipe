@@ -36,7 +36,6 @@ export default function Index() {
     async function userAlreadyExists() {
         try {
             const userName = await getUserNameFromStorage()
-            console.log('nome no storage',userName)
     
             if(userName.length > 0) {
                 router.push({
@@ -108,7 +107,7 @@ export default function Index() {
                         <Image source={require('../assets/chiken.jpg')} className={`rounded-lg ${keyboardStatus ? 'hidden': 'w-[250px] h-[250px]'} `}/>
                     </View>
 
-                    <View className='justify-center items-center gap-12 mt-10 pb-7'>
+                    <View className='justify-center items-center gap-12 mt-9 pb-7'>
                         <Text className='text-center text-3xl font-bold'>
                             Welcome to AmigoKitchen
                         </Text>
