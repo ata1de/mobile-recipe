@@ -1,6 +1,7 @@
 import { Input } from "@/components/input";
+import { categories } from "@/data/categories";
 import { UserState } from "@/store/slices/userSlice";
-import { Image, Text, View } from "react-native";
+import { FlatList, Image, Text, View } from "react-native";
 import { useSelector } from "react-redux";
 
 export default function Home() {
@@ -26,7 +27,21 @@ export default function Home() {
 
             <View className="flex-1 my-5">
                 <Text className="text-2xl text-left font-bold text-red-950">Categories</Text>
-
+                <FlatList
+                    data={categories}
+                    className="overflow-x-scroll w-full"
+                    renderItem={({ item }) => (
+                        <View className="flex-col justify-center items-center w-[100px] rounded-xl">
+                            <Image 
+                                source={item.imgUrl} 
+                                className="w-8 h-8" 
+                                resizeMode="cover" 
+                            />
+                            <Text className="text-sm font-semibold">{item.name}</Text>
+                        </View>
+                    )}
+                    contentContainerClassName="p-5 gap-3 flex-row justify-center items-center "
+                />
             </View>
         </View>
     )
