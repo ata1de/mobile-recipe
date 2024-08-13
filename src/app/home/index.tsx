@@ -6,18 +6,21 @@ import { Button } from "@/components/button";
 
 import { HomeIcon, Plus, TextSearch } from 'lucide-react-native';
 
+import RNPickerSelect from 'react-native-picker-select';
 
 import { colors } from "@/styles/colors";
 
+import { Input } from "@/components/input";
+import { Modal } from "@/components/modal";
 import Info from "./info";
 import Main from "./main";
 
 import { RecipeCreationAttributes, recipeServer } from "@/server/recipeServer";
-import { yupResolver } from '@hookform/resolvers/yup';
-import { useForm } from "react-hook-form";
 
-import { Input } from "@/components/input";
-import { Modal } from "@/components/modal";
+import { yupResolver } from '@hookform/resolvers/yup';
+import { Controller, useForm } from "react-hook-form";
+
+import { Loading } from "@/components/loading";
 import * as Yup from 'yup';
 
 
@@ -36,49 +39,51 @@ export default function Home() {
     const [ options, setOptions ] = useState<'home' | 'search'>('home')
     const [ showModal, setShowModal ] = useState(false)
 
-
-    // FORM STATES
-    const [title, setTitle] = useState('');
-    const [description, setDescription] = useState('');
-    const [time, setTime] = useState('');
-    const [difficulty, setDifficulty] = useState('');
-    const [category, setCategory] = useState('');
-    const [calories, setCalories] = useState('');
-    const [imgUrl, setImgUrl] = useState('');
+    //LOADING
+    const [ loading, setLoading ] = useState(false)
 
     //FORM
-    const { handleSubmit, formState: { errors } } = useForm<RecipeCreationAttributes>({
+    const { control, handleSubmit, formState: { errors } } = useForm<RecipeCreationAttributes>({
         resolver: yupResolver(validationSchema),
-      });
+        defaultValues: {
+            title: '', // Valor padrão para o campo "title"
+            description: '', // Valor padrão para o campo "description"
+            time: Number('0'), // Valor padrão para o campo "time"
+            difficulty: 'Easy', // Valor padrão para o campo "difficulty"
+            category: 'Lunch', // Valor padrão para o campo "category"
+            calories: Number('0'), // Valor padrão para o campo "calories"
+            imgUrl: '', // Valor padrão para o campo "imgUrl"
+        },
+    });
 
     //FUNCTIONS
-    async function handleCreateRecipe() {
+    async function handleCreateRecipe(data: RecipeCreationAttributes) {
         try {
-            const errorSchema = errors.calories || errors.category || errors.description || errors.difficulty || errors.imgUrl || errors.time || errors.title
-            if (errorSchema){    
-                return Alert.alert('Error', 'Fill all fields')
-            }
-            const recipe: RecipeCreationAttributes = {
-                title,
-                description,
-                time: Number(time),
-                difficulty,
-                category,
-                calories: Number(calories),
-                imgUrl
-            }
+            setLoading(true);
 
-            const response = await recipeServer.createRecipe(recipe)
+            const recipe: RecipeCreationAttributes = {
+                ...data,
+                time: Number(data.time),
+                calories: Number(data.calories)
+            };
+
+            const response = await recipeServer.createRecipe(recipe);
 
             if (response === 201) {
-                Alert.alert('Success', 'Recipe created successfully')
+                Alert.alert('Success', 'Recipe created successfully');
             }
-
+            
+            setShowModal(false);
         } catch (error) {
-            console.log('Error in create recipe', error)
+            console.log('Error in create recipe', error);
         } finally {
-            setShowModal(false)
+            setLoading(false);
         }
+
+    }
+
+    if (loading) {
+        return <Loading />
     }
     
     return (
@@ -139,59 +144,134 @@ export default function Home() {
                 <View className="gap-4 mt-5">
                     <View className="flex-row items-center justify-center gap-2">
                         <Input className="flex-1">
-                            <Input.Field
-                            value={title}
-                            onChangeText={setTitle}
-                            placeholder="Write the title"
+                            <Controller
+                                control={control}
+                                name="title"
+                                render={({ field: { onChange, onBlur, value } }) => (
+                                    <Input.Field
+                                        value={value}
+                                        onChangeText={onChange}
+                                        onBlur={onBlur}
+                                        placeholder="Write the title"
+                                        
+                                    />
+                                )}
                             />
                         </Input>
                         <Input className="flex-1">
-                            <Input.Field
-                            value={description}
-                            onChangeText={setDescription}
-                            placeholder="Write the description"
+                            <Controller
+                                control={control}
+                                name="description"
+                                render={({ field: { onChange, onBlur, value } }) => (
+                                    <Input.Field
+                                        value={value}
+                                        onChangeText={onChange}
+                                        onBlur={onBlur}
+                                        placeholder="Write the description"
+                                        
+                                    />
+                                )}
                             />
                         </Input>
                     </View>
                     <View className="flex-row items-center justify-center gap-2">
                         <Input className="flex-1">
-                            <Input.Field
-                            value={time}
-                            onChangeText={setTime}
-                            placeholder="Write the time"
+                            <Controller
+                                control={control}
+                                name="time"
+                                render={({ field: { onChange, onBlur, value } }) => (
+                                    <Input.Field
+                                        value={value.toLocaleString()}
+                                        onChangeText={onChange}
+                                        onBlur={onBlur}
+                                        placeholder="Write the time"
+                                        
+                                    />
+                                )}
                             />
                         </Input>
-                        <Input className="flex-1">
-                            <Input.Field
-                            placeholder="Write the title of the recipe"
+                        <View className="flex-row flex-1 items-center justify-center rounded-lg py-3.5 border-red-600 border">
+                            <Controller
+                                control={control}
+                                name="difficulty"
+                                render={({ field: { onChange, value } }) => (
+                                    <RNPickerSelect
+                                        value={value}
+                                        activeItemStyle={{ backgroundColor: colors.red[950] }}
+                                        dropdownItemStyle={{ backgroundColor: colors.red[200] }}
+                                        darkTheme
+                                        style={{ inputAndroid: { color: colors.red[950] }, inputIOS: { color: colors.red[950] }}}
+                                        onValueChange={onChange}
+                                        items={[
+                                            { label: 'Easy', value: 'Easy' },
+                                            { label: 'Medium', value: 'Medium' },
+                                            { label: 'Hard', value: 'Hard' },
+                                        ]}
+                                    />
+                                )}
                             />
-                        </Input>
+                        </View>
                     </View>
                     <View className="flex-row items-center justify-center gap-2">
-                        <Input className="flex-1">
-                            <Input.Field
-                            placeholder="Write the title of the recipe"
+                        <View className="flex-row flex-1 items-center justify-center rounded-lg py-3.5 border-red-600 border">
+                            <Controller
+                                control={control}
+                                name="category"
+                                render={({ field: { onChange, value } }) => (
+                                    <RNPickerSelect
+                                        value={value}
+                                        activeItemStyle={{ backgroundColor: colors.red[950] }}
+                                        dropdownItemStyle={{ backgroundColor: colors.red[200] }}
+                                        darkTheme
+                                        style={{ inputAndroid: { color: colors.red[950] }, inputIOS: { color: colors.red[950] }}}
+                                        onValueChange={onChange}
+                                        items={[
+                                            { label: 'Lunch', value: 'Lunch' },
+                                            { label: 'Dinner', value: 'Dinner' },
+                                            { label: 'Sweets', value: 'Sweets' },
+                                            { label: 'Salted', value: 'Salted' },
+                                            { label: 'Breakfast', value: 'Breakfast' },
+                                        ]}
+                                    />
+                                )}
                             />
-                        </Input>
+                        </View>
                         <Input className="flex-1">
-                            <Input.Field
-                            value={calories}
-                            onChangeText={setCalories}
-                            placeholder="Write the calories"
+                            <Controller
+                                control={control}
+                                name="calories"
+                                render={({ field: { onChange, onBlur, value } }) => (
+                                    <Input.Field
+                                        value={value.toLocaleString()}
+                                        onChangeText={onChange}
+                                        onBlur={onBlur}
+                                        placeholder="Write the calories"
+                                        
+                                    />
+                                )}
                             />
                         </Input>
                     </View>
                     <Input>
-                        <Input.Field
-                        value={imgUrl}
-                        onChangeText={setImgUrl}
-                        placeholder="Write url from image"
+                        <Controller
+                            control={control}
+                            name="imgUrl"
+                            render={({ field: { onChange, onBlur, value } }) => (
+                                <Input.Field
+                                    value={value}
+                                    onChangeText={onChange}
+                                    onBlur={onBlur}
+                                    placeholder="Write url from image"
+                                    
+                                />
+                            )}
                         />
                     </Input>
                     <Button
-                    className="rounded-lg" 
-                    variant="secondary"
-                    onPress={handleSubmit(handleCreateRecipe)}>
+                        className="rounded-lg" 
+                        variant="secondary"
+                        onPress={handleSubmit(handleCreateRecipe)}
+                    >
                         <Button.Title>Create recipe</Button.Title>
                     </Button>
                 </View>

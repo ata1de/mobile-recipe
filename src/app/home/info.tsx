@@ -1,19 +1,17 @@
 import { RecommendationRecipe } from "@/components/recommendationRecipe";
 import SearchComponent from "@/components/searchComponent";
-import { useAppDispatch, useAppSelector } from "@/store/hooks/hooks";
-import { removeRecent } from "@/store/slices/recentViewerSlice";
-import { useEffect } from "react";
+import { useAppSelector } from "@/store/hooks/hooks";
 import { FlatList, Text, View } from "react-native";
 
 export default function Info() {
     //REDUX
     const recentViewer = useAppSelector((state) => state.recentView.recentViewsRecipes)
     const favorites = useAppSelector((state) => state.favorites.favoriteRecipes)
-    const dispatch = useAppDispatch()
 
-    useEffect(() => {
-        dispatch(removeRecent({ id: 4 }))
-    },[])
+    console.log('favorites', favorites.map((item) => item.title))
+    console.log('recentViewer', recentViewer.map((item) => item.title))
+
+    
     return (
         
         <View className="flex-1 p-7">

@@ -18,7 +18,7 @@ export const recentViewersSlice = createSlice({
             const find = state.recentViewsRecipes.find(recipe => recipe.id === action.payload.id);
             if (!find) {
                 console.log('add recent')
-                state.recentViewsRecipes.push(action.payload);
+                state.recentViewsRecipes.unshift(action.payload);
             }
         },
         removeRecent: (state, action: PayloadAction<{ id: number }>) => {
