@@ -9,8 +9,8 @@ export default function Info() {
     const favorites = useAppSelector((state) => state.favorites.favoriteRecipes)
 
     console.log('favorites', favorites.map((item) => item.title))
-    console.log('recentViewer', recentViewer.map((item) => item.title))
 
+    console.log('recentViewerSlice', recentViewer.map((item) => item.title))
     
     return (
         
@@ -21,11 +21,11 @@ export default function Info() {
                 {
                     recentViewer.length == 0 ? (
                         <Text className="text-zinc-400 font-regular text-base mt-2 mb-6">
-                            No recent link found.
+                            No recent recipe found.
                         </Text>
                     ) : (
                         <FlatList 
-                        data={recentViewer.slice(0, 5)}
+                        data={recentViewer.slice(0, 5)} 
                         horizontal
                         renderItem={({ item }) => <RecommendationRecipe {...item} />}
                         contentContainerClassName="gap-3 flex-row pb-3"

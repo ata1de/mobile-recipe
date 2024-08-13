@@ -19,6 +19,13 @@ export const recentViewersSlice = createSlice({
             if (!find) {
                 console.log('add recent')
                 state.recentViewsRecipes.unshift(action.payload);
+            } else {
+                const index = state.recentViewsRecipes.indexOf(find);
+                if (index !== -1) {
+                    state.recentViewsRecipes.splice(index, 1);
+                }
+                
+                state.recentViewsRecipes.unshift(find);
             }
         },
         removeRecent: (state, action: PayloadAction<{ id: number }>) => {

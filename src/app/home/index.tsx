@@ -141,7 +141,7 @@ export default function Home() {
             visible={showModal}
             subtitle="Fill the fields below to create a new recipe" 
             >
-                <View className="gap-4 mt-5">
+                <View className="gap-4 mt-6">
                     <View className="flex-row items-center justify-center gap-2">
                         <Input className="flex-1">
                             <Controller

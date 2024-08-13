@@ -96,8 +96,11 @@ export default function RecipeDetails() {
 
             <View className="flex-1 p-7 rounded-t-xl">
                 <View className="gap-4">
-                    <View className="flex-row justify-between w-full gap-4">
-                        <Text className="font-semibold text-red-950 text-2xl">{recipe.title}</Text>
+                    <View className="flex-row justify-between items-center w-full gap-4">
+                        <View className="justify-center items-start gap-1">
+                            <Text className="text-sm text-red-400">{recipe.category}</Text>
+                            <Text className="font-semibold text-red-950 text-2xl">{recipe.title}</Text>
+                        </View>
                         {
                             isFavorite ? (
                                 <Pressable onPress={() => ToggleFavorite(recipe)} className="rounded-full p-2">

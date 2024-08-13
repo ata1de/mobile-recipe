@@ -8,7 +8,7 @@ import { colors } from "@/styles/colors";
 import { router } from "expo-router";
 import { Search } from "lucide-react-native";
 import { useEffect, useState } from "react";
-import { Alert, FlatList, Image, ScrollView, Text, View } from "react-native";
+import { Alert, FlatList, Image, Pressable, ScrollView, Text, View } from "react-native";
 
 export default function Main() {
     //REDUX
@@ -89,14 +89,14 @@ export default function Main() {
                     horizontal
                     contentContainerClassName="flex-row gap-3 mt-4 flex-row justify-start overflow-scroll"
                     renderItem={({ item }) => (
-                        <View className="flex-col p-3 gap-2 border border-red-100 justify-center items-center w-[90px] max-h-[100px] rounded-lg">
+                        <Pressable onPress={() => router.navigate(`/category/${item.name}` as any)} className="flex-col p-3 gap-2 border border-red-100 justify-center items-center w-[90px] max-h-[100px] rounded-lg">
                             <Image 
                                 source={item.imgUrl} 
                                 style={{width: 50, height: 50}}
                                 resizeMode="cover" 
                             />
                             <Text className="text-sm font-semibold">{item.name}</Text>
-                        </View>
+                        </Pressable>
                     )}
                 />
 
