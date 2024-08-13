@@ -47,7 +47,6 @@ export default function Search() {
             // Navegar para a nova página
             router.push({
                 pathname: `/search/${inputValue}` as any,  // Cast para "any" ou "string"
-                params: { name: inputValue },
             });
             
             

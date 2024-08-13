@@ -39,7 +39,7 @@ export default function Index() {
     
             if(userName.length > 0) {
                 router.push({
-                    pathname: '/home' as any
+                    pathname: '/home'
                 })   
             }  
         } catch (error) {

@@ -12,7 +12,7 @@ export interface Recipe {
     // authorId: number;
 }
 
-type RecipeCreationAttributes = Omit<Recipe, 'id'>
+export type RecipeCreationAttributes = Omit<Recipe, 'id'>
 
 export interface RecipeByCategoryAndName {
     recipes: Recipe[],
@@ -78,7 +78,9 @@ async function getTop5NewRecipes() {
 
 async function createRecipe(recipe: RecipeCreationAttributes) {
     try {
-        await api.post('/recipes', recipe)
+        const response = await api.post('/recipes', recipe)
+
+        return response.status
     } catch (error) {
         console.log('Error creating recipe:', error)
         throw new Error
