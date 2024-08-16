@@ -56,7 +56,7 @@ export default function Index() {
                     </View>
 
                     <View className='justify-center bottom-14 items-center self-center gap-12 py-3 bg-white w-full absolute z-20 rounded-t-[30px]'>
-                        <View className=' items-center gap-12 py-8 px-7 rounded-t-[30px]'>
+                        <View className='items-center gap-12 py-8 px-7 rounded-t-[30px]'>
                             <View className='flex justify-center items-start'>
                                 <Text className='text-left text-3xl font-bold'>
                                     Welcome to AmigoKitchen

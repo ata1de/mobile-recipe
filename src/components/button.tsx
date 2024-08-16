@@ -35,7 +35,7 @@ function Button({ children ,variant = 'primary', isLoading, className, ...props 
 function Title({ children, className }: TextInputProps) {
     const { variant } = useContext(ThemeContext)
 
-    return <Text className={clsx("text-base font-semibold",
+    return <Text className={clsx("",
         {
             'text-[#E84143]': variant === 'primary',
             'text-[#FFFCFC]': variant === 'secondary',

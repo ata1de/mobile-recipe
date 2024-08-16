@@ -269,7 +269,7 @@ export default function Home() {
                     </Input>
                     <Button
                         className="rounded-lg h-11 px-3" 
- h-11 px-3                        variant="secondary"
+                        variant="secondary"
                         onPress={handleSubmit(handleCreateRecipe)}
                     >
                         <Button.Title>Create recipe</Button.Title>
