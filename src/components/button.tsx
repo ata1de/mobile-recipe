@@ -14,7 +14,7 @@ const ThemeContext = createContext<{variant?: Variants}>({})
 
 function Button({ children ,variant = 'primary', isLoading, className, ...props }: ButtonProps) {
     return <TouchableOpacity
-     className={clsx("h-11 flex justify-center items-center gap-2 flex-row px-3 ",
+     className={clsx("flex justify-center items-center gap-2 flex-row ",
         {
             'bg-[#feebea]': variant === 'primary',
             'bg-[#F65050]': variant === 'secondary',
@@ -32,14 +32,15 @@ function Button({ children ,variant = 'primary', isLoading, className, ...props 
     </TouchableOpacity>
 }
 
-function Title({ children }: TextInputProps) {
+function Title({ children, className }: TextInputProps) {
     const { variant } = useContext(ThemeContext)
 
     return <Text className={clsx("text-base font-semibold",
         {
             'text-[#E84143]': variant === 'primary',
             'text-[#FFFCFC]': variant === 'secondary',
-        }
+        },
+        className
     )}>{children}</Text>
 }
 

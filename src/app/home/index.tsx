@@ -99,7 +99,7 @@ export default function Home() {
             <View className="w-full absolute -bottom-1 self-center justify-end z-10">
                 <View className="w-full flex-row bg-[#feebea] self-center border-zinc-300 gap-2 p-4 rounded-lg">
                     <Button 
-                    className="flex-1 rounded-lg "
+                    className="flex-1 rounded-lg h-11 px-3 "
                     
                     onPress={() => setOptions('home')}
                     >
@@ -111,8 +111,8 @@ export default function Home() {
                     </Button>
 
                     <Button
-                    // className="absolute bottom-10 left-[155px] z-10 self-center justify-end rounded-full"
-                    className="flex-1 rounded-lg"
+                    // className="absolute botto h-11 px-3m-10 left-[155px] z-10 self-center justify-end rounded-full"
+                    className="flex-1 rounded-lg h-11 px-3"
                     variant="secondary"
                     onPress={() => setShowModal(true)}
                     >
@@ -123,7 +123,7 @@ export default function Home() {
                     </Button>
 
                     <Button 
-                    className="flex-1 rounded-lg "
+                    className="flex-1 rounded-lg h-11 px-3 "
                     
                     onPress={() => setOptions('search')}
                     >
@@ -141,7 +141,7 @@ export default function Home() {
             visible={showModal}
             subtitle="Fill the fields below to create a new recipe" 
             >
-                <View className="gap-4 mt-6">
+                <View className="gap-4 mt-7">
                     <View className="flex-row items-center justify-center gap-2">
                         <Input className="flex-1">
                             <Controller
@@ -268,8 +268,8 @@ export default function Home() {
                         />
                     </Input>
                     <Button
-                        className="rounded-lg" 
-                        variant="secondary"
+                        className="rounded-lg h-11 px-3" 
+ h-11 px-3                        variant="secondary"
                         onPress={handleSubmit(handleCreateRecipe)}
                     >
                         <Button.Title>Create recipe</Button.Title>

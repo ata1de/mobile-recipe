@@ -7,10 +7,6 @@ export default function Info() {
     //REDUX
     const recentViewer = useAppSelector((state) => state.recentView.recentViewsRecipes)
     const favorites = useAppSelector((state) => state.favorites.favoriteRecipes)
-
-    console.log('favorites', favorites.map((item) => item.title))
-
-    console.log('recentViewerSlice', recentViewer.map((item) => item.title))
     
     return (
         

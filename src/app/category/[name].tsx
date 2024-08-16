@@ -11,13 +11,13 @@ import { FlatList, Image, Pressable, Text, View } from "react-native";
 export default function Category() {
     //PARAMS
     const category = useLocalSearchParams<{ name: string}>().name
-    console.log(category)
 
     //LOADING
     const [categoryLoading, setCategoryLoading] = useState(true)
 
     //DATA
     const [recipeByCategory, setRecipeByCategory] = useState<Recipe[]>([])
+    const [activeCategory, setActiveCategory] = useState<string>(category)
 
     //FUNCTIONS 
     async function getByCategory() {
@@ -52,25 +52,39 @@ export default function Category() {
                     horizontal
                     contentContainerClassName="flex-row gap-3 mt-4 flex-row justify-start overflow-scroll"
                     renderItem={({ item }) => (
-                        <Pressable onPress={() => router.navigate(`/category/${item.name}` as any)} className="flex-col p-3 gap-2 border border-red-100 justify-center items-center w-[90px] max-h-[100px] rounded-lg">
+                        <Pressable 
+                        onPress={() => {
+                            router.navigate(`/category/${item.name}` as any)
+                            setActiveCategory(item.name)
+                        }} 
+                        className={`flex-col p-3 gap-2 border border-red-100 justify-center items-center w-[90px] max-h-[100px] rounded-lg ${activeCategory === item.name && 'bg-red-500'}`}
+                        >
                             <Image 
                                 source={item.imgUrl} 
                                 style={{width: 50, height: 50}}
                                 resizeMode="cover" 
                             />
-                            <Text className="text-sm font-semibold">{item.name}</Text>
+                            <Text className={`text-sm font-semibold ${activeCategory === item.name && 'text-red-50'}`}>{item.name}</Text>
                         </Pressable>
                     )}
                 />
             </View>
-                    
-            <FlatList 
-                    data={recipeByCategory}
-                    contentContainerClassName="flex-wrap w-full flex-1 gap-3 mt-4 flex-row justify-center items-center"
-                    renderItem={({ item }) => (
-                        <RecommendationRecipe {...item} />
-                    )}
-                />
+                
+            {
+                recipeByCategory.length == 0 ? (
+                    <Text className="text-red-700 font-regular text-base mt-2 mb-6 text-center">
+                        No recipes found in this category.
+                    </Text>) : (
+                        <FlatList 
+                        data={recipeByCategory}
+                        contentContainerClassName="flex-wrap w-full flex-1 gap-3 mt-4 flex-row justify-center items-center"
+                        renderItem={({ item }) => (
+                            <RecommendationRecipe {...item} />
+                        )}
+                    />
+                    )
+            }
+            
         </View>
     )
 }

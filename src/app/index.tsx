@@ -1,11 +1,9 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
 import { Button } from '@/components/button'
-import { Input } from '@/components/input'
 
-import { Alert, Image, Keyboard, KeyboardAvoidingView, Platform, Text, TouchableWithoutFeedback, View } from 'react-native'
+import { Alert, Image, Keyboard, Text, View } from 'react-native'
 
-import { Loading } from '@/components/loading'
 import getUserNameFromStorage from '@/storage/getUserName'
 import { useAppDispatch, useAppSelector } from '@/store/hooks/hooks'
 import { setUserName } from '@/store/slices/userSlice'
@@ -36,7 +34,7 @@ export default function Index() {
     async function userAlreadyExists() {
         try {
             const userName = await getUserNameFromStorage()
-    
+
             if(userName.length > 0) {
                 router.push({
                     pathname: '/home'
@@ -86,57 +84,47 @@ export default function Index() {
         }
     }
 
-    useEffect(() => {
-        userAlreadyExists()
-    }, [])
+    // useEffect(() => {
+    //     userAlreadyExists()
+    // }, [])
 
-    if(loadingStorage) {
-        return <Loading/>
-    }
+    // if(loadingStorage) {
+    //     return <Loading/>
+    // }
 
     return (
-        <KeyboardAvoidingView
-                    style={{ flex: 1 }}
-                    behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-                    keyboardVerticalOffset={Platform.OS === 'ios' ? 16 : 0} // Ajuste o valor conforme necessário
-                    contentContainerClassName='flex-1 justify-center items-center pt-8 gap-12'
-                    >
-            <TouchableWithoutFeedback onPress={handleKeyboardStatus}>
-                <View className='flex-1'>
-                    <View className='bg-[#fe5f3c] flex-1 justify-center items-center'>
+                <View className='flex-1 relative'>
+                    <View className='bg-[#fe5f3c] py-20 justify-center items-center'>
                         <Image source={require('../assets/chiken.jpg')} className={`rounded-lg ${keyboardStatus ? 'hidden': 'w-[250px] h-[250px]'} `}/>
                     </View>
 
-                    <View className='justify-center items-center gap-12 mt-9 pb-7'>
-                        <Text className='text-center text-3xl font-bold'>
-                            Welcome to AmigoKitchen
-                        </Text>
-                        
+                    <View className='justify-center bottom-14 items-center self-center gap-12 py-3 bg-white w-full absolute z-20 rounded-t-[30px]'>
+                        <View className=' items-center gap-12 py-8 px-7 rounded-t-[30px]'>
+                            <View className='flex justify-center items-start'>
+                                <Text className='text-left text-3xl font-bold'>
+                                    Welcome to AmigoKitchen
+                                </Text>
+                                <Text className='text-left text-sm font-light mt-4'>Your culinary journey starts here. Sign in to explore exclusive recipes, save your favorites, and share your creations with a community of friends who love cooking just as much as you do</Text>
+                            </View>
+                            
 
-                        <View className='w-[300px] items-start gap-3'>
-                            <Text className='text-xl font-semibold'>Whats your name?</Text>
-                            <Input>
-                                <Input.Field
-                                 placeholder='Enter your name'
-                                 onPressIn={() => setKeyboardStatus(true)}
-                                 value={name}
-                                 onChangeText={setName}
-                                 ></Input.Field>
-                            </Input>
-                            <Button 
-                            className='w-full' 
-                            onPress={() => saveUserName(name)}
-                            isLoading={loading}
-                            >
-                                <Button.Title>Continue</Button.Title>
-                            </Button>
+                            <View className='w-[300px] flex-1 items-center flex-row gap-3'>
+                                <Button 
+                                variant='secondary'
+                                className='flex-1 rounded-full p-5'>
+                                    <Button.Title className='text-lg font-bold'>Login</Button.Title>
+                                </Button>
+                                <Button 
+                                className='flex-1 rounded-full p-5' 
+                                onPress={() => saveUserName(name)}
+                                isLoading={loading}
+                                >
+                                    <Button.Title className='text-lg font-bold'>Register</Button.Title>
+                                </Button>
 
+                            </View>
                         </View>
                     </View>
                 </View>
-            </TouchableWithoutFeedback>
-                    
-        </KeyboardAvoidingView>
-
     )
 }
