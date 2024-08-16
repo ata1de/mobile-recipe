@@ -2,34 +2,26 @@ import { useState } from 'react'
 
 import { Button } from '@/components/button'
 
-import { Alert, Image, Keyboard, Text, View } from 'react-native'
+import { Image, Text, View } from 'react-native'
 
 import getUserNameFromStorage from '@/storage/getUserName'
-import { useAppDispatch, useAppSelector } from '@/store/hooks/hooks'
-import { setUserName } from '@/store/slices/userSlice'
+import { useAppSelector } from '@/store/hooks/hooks'
 import { router } from 'expo-router'
 
 
 
 export default function Index() {
 
-    //REDUX 
-    const dispatch = useAppDispatch()  
+    //REDUX  
     const userName = useAppSelector((state) => state.user.name)
-    const [name, setName] = useState(userName)
 
     //STATES
     const [ keyboardStatus, setKeyboardStatus ] = useState(false)
 
     //Loading
-    const [loading, setLoading] = useState(false)
     const [ loadingStorage, setLoadingStorage ] = useState(true)
 
     //FUNCTIONS
-    function handleKeyboardStatus() {
-        Keyboard.dismiss()
-        setKeyboardStatus(false)
-    }
 
     async function userAlreadyExists() {
         try {
@@ -48,41 +40,6 @@ export default function Index() {
         }
     }
 
-    async function saveUserName(name: string) {
-        try {
-            setLoading(true)
-
-            if (!name) {
-                return Alert.alert('Name is required')
-            }
-
-            Alert.alert(
-                'Confirm',
-                'Are you sure you want to save this name?',
-                [
-                    {
-                        text: 'Cancel',
-                        onPress: () => console.log('Save Cancelled'),
-                        style: 'cancel',
-                    },
-                    {
-                        text: 'OK',
-                        onPress: () => {
-                            dispatch(setUserName(name))
-                            router.push({
-                                pathname: '/home' as any
-                            })
-                        },
-                    },
-                ]
-            );
-
-        } catch (error) {
-            
-        } finally {
-            setLoading(false)
-        }
-    }
 
     // useEffect(() => {
     //     userAlreadyExists()
@@ -111,13 +68,15 @@ export default function Index() {
                             <View className='w-[300px] flex-1 items-center flex-row gap-3'>
                                 <Button 
                                 variant='secondary'
-                                className='flex-1 rounded-full p-5'>
+                                className='flex-1 rounded-full p-5'
+                                onPress={() => router.push({pathname: '/login' as any})}
+                                
+                                >
                                     <Button.Title className='text-lg font-bold'>Login</Button.Title>
                                 </Button>
                                 <Button 
                                 className='flex-1 rounded-full p-5' 
-                                onPress={() => saveUserName(name)}
-                                isLoading={loading}
+                                onPress={() => router.push({pathname: '/register' as any})}
                                 >
                                     <Button.Title className='text-lg font-bold'>Register</Button.Title>
                                 </Button>
