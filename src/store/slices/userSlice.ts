@@ -2,22 +2,23 @@ import { createSlice } from "@reduxjs/toolkit";
 
 export interface UserState {
     user: {
-        name: string
+        isLoggedIn: boolean
     }
 }
+;
 
 export const userSlice = createSlice({
     name: 'user',
     initialState: {
-        name: ''
+        isLoggedIn: false
     },
     reducers: {
-        setUserName: (state, action) => {
-            state.name = action.payload
-        }
+        setLoggedIn: (state, action) => {
+            state.isLoggedIn = action.payload
+        },
     }
 }) 
 
-export const { setUserName } = userSlice.actions;
+export const { setLoggedIn } = userSlice.actions;
 
 export default userSlice.reducer;

@@ -1,11 +1,11 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { Button } from '@/components/button'
 
 import { Image, Text, View } from 'react-native'
 
-import getUserNameFromStorage from '@/storage/getUserName'
-import { useAppSelector } from '@/store/hooks/hooks'
+import { Loading } from '@/components/loading'
+import { useAppDispatch, useAppSelector } from '@/store/hooks/hooks'
 import { router } from 'expo-router'
 
 
@@ -13,7 +13,8 @@ import { router } from 'expo-router'
 export default function Index() {
 
     //REDUX  
-    const userName = useAppSelector((state) => state.user.name)
+    const dispatch = useAppDispatch()
+    const logged = useAppSelector((state) => state.user.isLoggedIn)
 
     //STATES
     const [ keyboardStatus, setKeyboardStatus ] = useState(false)
@@ -25,9 +26,8 @@ export default function Index() {
 
     async function userAlreadyExists() {
         try {
-            const userName = await getUserNameFromStorage()
 
-            if(userName.length > 0) {
+            if(logged) {
                 router.push({
                     pathname: '/home'
                 })   
@@ -41,13 +41,13 @@ export default function Index() {
     }
 
 
-    // useEffect(() => {
-    //     userAlreadyExists()
-    // }, [])
+    useEffect(() => {
+        userAlreadyExists()
+    }, [])
 
-    // if(loadingStorage) {
-    //     return <Loading/>
-    // }
+    if(loadingStorage) {
+        return <Loading/>
+    }
 
     return (
                 <View className='flex-1 relative'>
