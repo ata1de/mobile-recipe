@@ -5,54 +5,46 @@ import { Button } from '@/components/button'
 import { Image, Text, View } from 'react-native'
 
 import { Loading } from '@/components/loading'
-import { useAppDispatch, useAppSelector } from '@/store/hooks/hooks'
+import { userService } from '@/server/userService'
 import { router } from 'expo-router'
 
 
 
 export default function Index() {
-
-    //REDUX  
-    const dispatch = useAppDispatch()
-    const logged = useAppSelector((state) => state.user.isLoggedIn)
-
-    //STATES
-    const [ keyboardStatus, setKeyboardStatus ] = useState(false)
-
     //Loading
-    const [ loadingStorage, setLoadingStorage ] = useState(true)
+    const [ loadingAuthenticated, setLoadingAuthenticated ] = useState(true)
 
     //FUNCTIONS
-
     async function userAlreadyExists() {
         try {
 
-            if(logged) {
+            const authenticated = await userService.check()
+
+            if(authenticated.isAuthenticated) {
                 router.push({
                     pathname: '/home'
                 })   
             }  
         } catch (error) {
-            console.log('Error getting user name from storage:', error)
+            console.log('Error getting if user is authenticated:', error)
             throw new Error 
         } finally {
-            setLoadingStorage(false)
+            setLoadingAuthenticated(false)
         }
     }
-
 
     useEffect(() => {
         userAlreadyExists()
     }, [])
 
-    if(loadingStorage) {
+    if(loadingAuthenticated) {
         return <Loading/>
     }
 
     return (
                 <View className='flex-1 relative'>
                     <View className='bg-[#fe5f3c] py-20 justify-center items-center'>
-                        <Image source={require('../assets/chiken.jpg')} className={`rounded-lg ${keyboardStatus ? 'hidden': 'w-[250px] h-[250px]'} `}/>
+                        <Image source={require('../assets/chiken.jpg')} className={`rounded-lg`}/>
                     </View>
 
                     <View className='justify-center bottom-14 items-center self-center gap-12 py-3 bg-white w-full absolute z-20 rounded-t-[30px]'>

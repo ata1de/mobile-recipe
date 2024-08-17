@@ -12,7 +12,7 @@ import { Alert, FlatList, Image, Pressable, ScrollView, Text, View } from "react
 
 export default function Main() {
     //REDUX
-    const userName = useAppSelector((state) => state.user.name)
+    const user = useAppSelector((state) => state.user.user)
 
     //LOADING
     const [newestLoading, setNewestLoading] = useState(true)
@@ -64,7 +64,7 @@ export default function Main() {
             <View className="justify-center items-center px-7 pt-7">
                 <View className="my-5 flex-row w-full justify-between items-center">
                     <View className="items-start gap-2 max-w-[200px]">
-                        <Text className="text-zinc-500 text-sm font-light">Hello, <Text className="text-red-500">{userName}</Text></Text>
+                        <Text className="text-zinc-500 text-sm font-light">Hello, <Text className="text-red-500">{user?.name}</Text></Text>
                         <Text className="text-2xl font-bold leading-7 text-red-950">What would you like to cook today?</Text>
                     </View>
 

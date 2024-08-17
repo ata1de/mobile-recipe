@@ -1,7 +1,5 @@
 import { Recipe } from "@/server/recipeServer";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-
-// Definindo o tipo para o estado inicial
 interface RecentViewersState {
     recentViewsRecipes: Recipe[];
 }

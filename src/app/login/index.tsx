@@ -1,8 +1,8 @@
 import { Button } from "@/components/button";
 import { Input } from "@/components/input";
 import { userService } from "@/server/userService";
-import { useAppDispatch } from "@/store/hooks/hooks";
-import { setLoggedIn } from "@/store/slices/userSlice";
+import { useAppDispatch, useAppSelector } from "@/store/hooks/hooks";
+import { setUser } from "@/store/slices/userSlice";
 import { colors } from "@/styles/colors";
 import { router } from "expo-router";
 import { ArrowLeft } from "lucide-react-native";
@@ -12,6 +12,7 @@ import { Alert, Image, Pressable, Text, View } from "react-native";
 export default function Login() {
     //REDUX
     const dispatch = useAppDispatch()
+    const user = useAppSelector((state) => state.user.user)
 
     //DATA
     const [ email, setEmail ] = useState('')
@@ -34,8 +35,8 @@ export default function Login() {
             })
 
             if(response.status === 200) {
-
-                dispatch(setLoggedIn(true))
+                
+                dispatch(setUser(response.user))
                 router.push({
                     pathname: '/home'
                 })
