@@ -7,8 +7,8 @@ import { router } from "expo-router";
 import { ArrowLeft } from "lucide-react-native";
 import { useState } from "react";
 import { Pressable, ScrollView, Text, View } from "react-native";
-import EditProfile from "./editStatus";
-import ProfileStatus from "./status";
+import EditProfile from "./editProfile";
+import ProfileStatus from "./profile";
 
 export default function Profile() {
     //REDUX
