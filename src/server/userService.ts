@@ -42,11 +42,9 @@ async function register({ name, email, password }: CreateUserAttributes ) {
 }
 
 async function check() {
-    const response = await api.get<AuthenticateResponse>('/auth/check')
+    const response = await api.get('/auth/check')
 
-    return {
-        isAuthenticated: response.data.isAuthenticated
-    }
+    return response
 }
 
 

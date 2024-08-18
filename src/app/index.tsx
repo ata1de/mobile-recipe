@@ -20,13 +20,15 @@ export default function Index() {
 
             const authenticated = await userService.check()
 
-            if(authenticated.isAuthenticated) {
+            if(authenticated) {
                 router.push({
                     pathname: '/home'
                 })   
             }  
         } catch (error) {
-            console.log('Error getting if user is authenticated:', error)
+            if (error instanceof Error) {
+                console.log('Error getting if user is authenticated:', error.message)
+            }
             throw new Error 
         } finally {
             setLoadingAuthenticated(false)
@@ -44,10 +46,10 @@ export default function Index() {
     return (
                 <View className='flex-1 relative'>
                     <View className='bg-[#fe5f3c] py-20 justify-center items-center'>
-                        <Image source={require('../assets/chiken.jpg')} className={`rounded-lg`}/>
+                        <Image source={require('../assets/chiken.jpg')} className={`rounded-lg h-72 w-72`}/>
                     </View>
 
-                    <View className='justify-center bottom-14 items-center self-center gap-12 py-3 bg-white w-full absolute z-20 rounded-t-[30px]'>
+                    <View className='justify-center bottom-10 items-center self-center gap-12 py-3 bg-white w-full absolute z-20 rounded-t-[30px]'>
                         <View className='items-center gap-12 py-8 px-7 rounded-t-[30px]'>
                             <View className='flex justify-center items-start'>
                                 <Text className='text-left text-3xl font-bold'>
