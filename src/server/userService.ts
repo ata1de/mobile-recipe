@@ -1,4 +1,5 @@
 import { api } from "./api";
+import { Recipe } from "./recipeServer";
 
 export interface LoginUserAttributes {
     email: string,
@@ -9,9 +10,11 @@ export interface User {
     name: string;
     email: string;
     password: string;
+    recipes: Recipe[];
+    createdAt: Date;
 }
 
-export interface CreateUserAttributes extends Omit<User, 'id'> {}
+export interface CreateUserAttributes extends Omit<User, 'id' | 'recipes' | 'createdAt'> {}
 
 export interface AuthenticateResponse {
     isAuthenticated: boolean
