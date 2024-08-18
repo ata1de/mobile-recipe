@@ -1,27 +1,27 @@
 import Avatar from "@/components/avatar";
 import { Button } from "@/components/button";
+import PersonalInfo from "@/components/personalInfo";
 import { useAppSelector } from "@/store/hooks/hooks";
 import { colors } from "@/styles/colors";
 import { dayjsTransformDate } from "@/utils/dayjsTransformDate";
+import { FormattedProfile } from "@/utils/formattedStatusProfile";
 import { router } from "expo-router";
-import { ArrowLeft } from "lucide-react-native";
-import { useState } from "react";
+import { ArrowLeft, Lock, Mail, Pencil } from "lucide-react-native";
 import { Pressable, ScrollView, Text, View } from "react-native";
-import EditProfile from "./editProfile";
-import ProfileStatus from "./profile";
 
 export default function Profile() {
     //REDUX
     const user = useAppSelector((state) => state.user.user)
 
     //DATA
-    const data = dayjsTransformDate(user?.createdAt!)
-    const [ status, setStatus ] = useState<'profile' | 'editProfile'>('profile')  
+   const userName = user?.name ? FormattedProfile.capitalize(user.name) : '';
+   const maskedPassword = user?.password ? FormattedProfile.maskPassword(user.password) : '';
+   const data = dayjsTransformDate(user?.createdAt!)
 
     return (
         <View className="flex-1 p-7">
             <View className="flex justify-center items-center gap-3 border-b-2 border-red-200 py-5">
-                <Pressable className="absolute left-0 top-8" onPressIn={() => router.back()}>
+                <Pressable className="absolute left-1 top-8" onPressIn={() => router.back()}>
                     <ArrowLeft color={colors.red[800]} className="w-14 h-14 m-4"/>
                 </Pressable>
 
@@ -31,13 +31,22 @@ export default function Profile() {
             </View>
 
             <ScrollView className="mt-5">
-                    {
-                        status === 'profile' ? (
-                            <ProfileStatus />
-                        ) : (
-                            <EditProfile />
-                        )
-                    }
+                <View className="flex-1 my-4">
+                    <View className="flex-row justify-between items-center">
+                        <Text className="text-lg font-semibold text-red-950">Personal Info</Text>
+
+                        <Pressable onPressIn={() => router.push('/profile/edit')}>
+                            <Text className="text-sm font-normal text-red-400">Edit</Text>
+                        </Pressable>
+
+                    </View>
+
+                    <View className="mt-4 w-full">
+                        <PersonalInfo Icon={Mail} gender="Email" content={user?.email!} />
+                        <PersonalInfo Icon={Pencil} gender="Name" content={userName} />
+                        <PersonalInfo Icon={Lock} gender="Password" content={maskedPassword} />
+                    </View> 
+                </View>
 
                     <Button
                     variant="secondary"
