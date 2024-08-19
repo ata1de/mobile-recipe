@@ -61,8 +61,6 @@ async function check() {
 async function update(data: UpdateUserRequest) {
     const response = await api.put<UpdateUserResponse>(`/user/${data.id}`, data)
 
-    console.log(response.data)
-
     return {
         user: response.data.user[0],
         status: response.status
@@ -77,8 +75,6 @@ async function logOut() {
 
 async function getUser(id: number) {
     const response = await api.get<User>(`/user/${id}`)
-
-    console.log(response.data)
 
     return response.data
 }

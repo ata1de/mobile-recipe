@@ -15,7 +15,7 @@ import { Modal } from "@/components/modal";
 import Info from "./info";
 import Main from "./main";
 
-import { RecipeCreationAttributes, recipeServer } from "@/server/recipeServer";
+import { recipeServer } from "@/server/recipeServer";
 
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Controller, useForm } from "react-hook-form";
@@ -28,12 +28,23 @@ import * as Yup from 'yup';
 const validationSchema = Yup.object().shape({
     title: Yup.string().required('Title is required'),
     description: Yup.string().required('Description is required'),
-    time: Yup.number().required('Time is required').positive('Must be a positive number'),
+    time: Yup.string().required('Time is required'),
     difficulty: Yup.string().required('Difficulty is required'),
     category: Yup.string().required('Category is required'),
-    calories: Yup.number().required('Calories is required').positive('Must be a positive number'),
+    calories: Yup.string().required('Calories is required'),
     imgUrl: Yup.string().url('Must be a valid URL').required('Image URL is required'),
   });
+
+interface RecipeForm {
+    title: string;
+    description: string;
+    time: string;
+    difficulty: string;
+    category: string;
+    calories: string;
+    imgUrl: string;
+    authorId?: number | undefined;
+}
 
 export default function Home() {
     //REDUX
@@ -47,21 +58,21 @@ export default function Home() {
     const [ loading, setLoading ] = useState(false)
 
     //FORM
-    const { control, handleSubmit, formState: { errors } } = useForm<RecipeCreationAttributes>({
+    const { control, handleSubmit, formState: { errors } } = useForm<RecipeForm>({
         resolver: yupResolver(validationSchema),
         defaultValues: {
             title: '', // Valor padrão para o campo "title"
             description: '', // Valor padrão para o campo "description"
-            time: Number('0'), // Valor padrão para o campo "time"
+            time: '', // Valor padrão para o campo "time"
             difficulty: 'Easy', // Valor padrão para o campo "difficulty"
             category: 'Lunch', // Valor padrão para o campo "category"
-            calories: Number('0'), // Valor padrão para o campo "calories"
+            calories: '', // Valor padrão para o campo "calories"
             imgUrl: '', // Valor padrão para o campo "imgUrl"
-        },
+        }
     });
 
     //FUNCTIONS
-    async function handleCreateRecipe(data: RecipeCreationAttributes) {
+    async function handleCreateRecipe(data: RecipeForm) {
         try {
             setLoading(true);
 
@@ -186,7 +197,7 @@ export default function Home() {
                                 name="time"
                                 render={({ field: { onChange, onBlur, value } }) => (
                                     <Input.Field
-                                        value={value.toLocaleString()}
+                                        value={value}
                                         onChangeText={onChange}
                                         onBlur={onBlur}
                                         placeholder="Write the time"

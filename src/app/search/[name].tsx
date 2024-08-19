@@ -63,8 +63,6 @@ export default function Search() {
         return <Loading />
     }
 
-    console.log(recipe)
-
     return (
         <View className="flex-1 p-5">
             <View className="flex-row gap-4 justify-between items-center">

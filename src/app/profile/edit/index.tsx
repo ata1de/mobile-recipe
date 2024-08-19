@@ -76,7 +76,6 @@ export default function EditProfile() {
     };
 
     async function handleUpdate(data: CreateUserAttributes) {
-        console.log("handleUpdate called with data: ", data);
         try {
             setUpdateLoading(true);
     
@@ -86,14 +85,11 @@ export default function EditProfile() {
                 name: data.name,
                 password: data.password,
             };
-    
-            console.log("userUpdate object: ", userUpdate);
-    
+        
             Alert.alert('Warning', 'Are you sure you want to update your profile?', [
                 {
                     text: 'Yes',
                     onPress: async () => {
-                        console.log("Yes button pressed");
                         await saveUser(userUpdate);
                     }
                 },
@@ -117,14 +113,13 @@ export default function EditProfile() {
             const response = await userService.update(data)
     
             if (response.status == 200) {
-
                 const user = await userService.getUser(Number(response.user))
 
                 if (!user) {
                     throw new Error('User not found')
                 }
 
-                dispatch(setUser(response.user))
+                dispatch(setUser(user))
                 
                 Alert.alert('Success', 'Profile updated successfully')
             }
