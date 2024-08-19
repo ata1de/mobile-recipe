@@ -21,6 +21,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Controller, useForm } from "react-hook-form";
 
 import { Loading } from "@/components/loading";
+import { useAppSelector } from "@/store/hooks/hooks";
 import * as Yup from 'yup';
 
 
@@ -35,6 +36,9 @@ const validationSchema = Yup.object().shape({
   });
 
 export default function Home() {
+    //REDUX
+    const user = useAppSelector((state) => state.user.user)
+
     //DATA
     const [ options, setOptions ] = useState<'home' | 'search'>('home')
     const [ showModal, setShowModal ] = useState(false)
@@ -61,10 +65,11 @@ export default function Home() {
         try {
             setLoading(true);
 
-            const recipe: RecipeCreationAttributes = {
+            const recipe = {
                 ...data,
                 time: Number(data.time),
-                calories: Number(data.calories)
+                calories: Number(data.calories),
+                authorId: user?.id as number
             };
 
             const response = await recipeServer.createRecipe(recipe);

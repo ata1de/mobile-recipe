@@ -21,8 +21,10 @@ export interface AuthenticateResponse {
 }
 
 export interface UpdateUserResponse {
-    user: User
+    user: string[]
 }
+
+export interface UpdateUserRequest extends Omit<User, 'recipes' | 'createdAt'> {}
 
 async function login({ email, password }: LoginUserAttributes) {
     const response = await api.post<{ user: User}>('/auth/login', {
@@ -56,11 +58,13 @@ async function check() {
     }
 }
 
-async function update(data: CreateUserAttributes) {
-    const response = await api.put<UpdateUserResponse>('/auth/update', data)
+async function update(data: UpdateUserRequest) {
+    const response = await api.put<UpdateUserResponse>(`/user/${data.id}`, data)
+
+    console.log(response.data)
 
     return {
-        user: response.data.user,
+        user: response.data.user[0],
         status: response.status
     }
 }
@@ -71,5 +75,13 @@ async function logOut() {
     return response
 }
 
+async function getUser(id: number) {
+    const response = await api.get<User>(`/user/${id}`)
 
-export const userService = { login, register, check, update, logOut }
+    console.log(response.data)
+
+    return response.data
+}
+
+
+export const userService = { login, register, check, update, logOut, getUser }

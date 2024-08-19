@@ -9,7 +9,7 @@ export interface Recipe {
     category: string;
     calories: number;
     imgUrl: string;
-    // authorId: number;
+    authorId?: number;
 }
 
 export type RecipeCreationAttributes = Omit<Recipe, 'id'>

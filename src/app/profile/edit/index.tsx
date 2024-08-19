@@ -4,15 +4,17 @@ import { useState } from "react";
 import { Alert, KeyboardAvoidingView, Platform, Pressable, ScrollView, Text, View } from "react-native";
 
 import Avatar from "@/components/avatar";
-import { Button } from "@/components/button";
 import { Input } from "@/components/input";
 
-import { CreateUserAttributes, userService } from "@/server/userService";
+import { CreateUserAttributes, UpdateUserRequest, userService } from "@/server/userService";
 
-import { useAppSelector } from "@/store/hooks/hooks";
+import { useAppDispatch, useAppSelector } from "@/store/hooks/hooks";
 
 import { colors } from "@/styles/colors";
 
+import { Button } from "@/components/button";
+import { Loading } from "@/components/loading";
+import { setUser } from "@/store/slices/userSlice";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Controller, useForm } from "react-hook-form";
 import * as yup from 'yup';
@@ -23,25 +25,50 @@ const validationSchema = yup.object().shape({
     password: yup.string().required()
 });
 
+function errorMessage(formIsValid: any) {
+    if (!formIsValid.isValid) {
+        let errorMessage = '';
+
+        switch (true) {
+            case !!formIsValid.errors.email?.message:
+                errorMessage = `Email Error: ${formIsValid.errors.email.message}`;
+                break;
+            case !!formIsValid.errors.name?.message:
+                errorMessage = `Name Error: ${formIsValid.errors.name.message}`;
+                break;
+            case !!formIsValid.errors.password?.message:
+                errorMessage = `Password Error: ${formIsValid.errors.password.message}`;
+                break;
+            default:
+                errorMessage = 'Unknown Error';
+        }
+
+        return Alert.alert('Error', errorMessage);
+    }
+}
+
 export default function EditProfile() {
     //REDUX
+    const dispatch = useAppDispatch()
     const user = useAppSelector((state) => state.user.user)
 
     //DATA
-    const [password, setPassword] = useState(user?.password!);
+    const [password, setPassword] = useState('');
 
     //FORM
     const { control, handleSubmit, formState } = useForm({
         resolver: yupResolver(validationSchema),
         defaultValues: {
-            email: user?.email!,
-            name: user?.name!,
-            password: password
+            name: '',
+            email: '',
+            password: '',
         }
+        
     })
 
     //LOADING
     const [showPassword, setShowPassword ] = useState(false)
+    const [ updateLoading, setUpdateLoading ] = useState(false)
 
     //FUNCTIONS
     const toggleShowPassword = () => {
@@ -49,39 +76,71 @@ export default function EditProfile() {
     };
 
     async function handleUpdate(data: CreateUserAttributes) {
-        if (!formState.isValid) {
-            return Alert.alert('Error', `${formState.errors}`)
-        }
-
+        console.log("handleUpdate called with data: ", data);
         try {
-            const user = {
+            setUpdateLoading(true);
+    
+            const userUpdate = {
+                id: user?.id!,
                 email: data.email,
                 name: data.name,
-                password: data.password
-            }
-
+                password: data.password,
+            };
+    
+            console.log("userUpdate object: ", userUpdate);
+    
             Alert.alert('Warning', 'Are you sure you want to update your profile?', [
                 {
                     text: 'Yes',
-                    onPress: () => saveUser(user)
+                    onPress: async () => {
+                        console.log("Yes button pressed");
+                        await saveUser(userUpdate);
+                    }
                 },
                 {
                     text: 'No',
+                    onPress: () => console.log("No button pressed")
                 }
-            ])
+            ]);
+        } catch (error) {
+            if (error instanceof Error) {
+                console.log("Error caught in handleUpdate: ", error.message);
+                Alert.alert('Error', error.message);
+            }
+        } finally {
+            setUpdateLoading(false);
+        }
+    }
 
+    async function saveUser(data: UpdateUserRequest) {
+        try {
+            const response = await userService.update(data)
+    
+            if (response.status == 200) {
+
+                const user = await userService.getUser(Number(response.user))
+
+                if (!user) {
+                    throw new Error('User not found')
+                }
+
+                dispatch(setUser(response.user))
+                
+                Alert.alert('Success', 'Profile updated successfully')
+            }
+            
         } catch (error) {
             if (error instanceof Error) {
                 Alert.alert('Error', error.message)
             }
-    }}
+            
+        }
+    }
 
-    async function saveUser(data: CreateUserAttributes) {
-        const response = await userService.update(data)
-
-            if (response.status == 200) {
-                Alert.alert('Success', 'Profile updated successfully')
-            }
+    if (updateLoading) {
+        return (
+            <Loading />
+        )
     }
 
     return (
@@ -117,7 +176,7 @@ export default function EditProfile() {
                             aria-label="Email"
                             placeholder='Write your email'
                             value={value}
-                            onChange={onChange}
+                            onChangeText={onChange}
                             onBlur={onBlur}
                             />
                         )}
@@ -134,7 +193,7 @@ export default function EditProfile() {
                             aria-label="name"
                             placeholder='Write your name'
                             value={value}
-                            onChange={onChange}
+                            onChangeText={onChange}
                             onBlur={onBlur}
                             />
                         )}
@@ -150,9 +209,9 @@ export default function EditProfile() {
                             render={({ field: { onChange, onBlur, value } }) => (
                                 <Input.Field
                                 className="max-w-[200px]"
-                                aria-label="Password"
+                                placeholder="Write your new password"
                                 secureTextEntry={!showPassword}
-                                onChange={onChange}
+                                onChangeText={onChange}
                                 onBlur={onBlur}
                                 value={value}
                                 />
@@ -176,9 +235,9 @@ export default function EditProfile() {
                     
 
                 <Button
-                variant="secondary"
-                className="flex-1 rounded-md p-3"
-                onPress={handleSubmit(handleUpdate)}
+                    variant="secondary"
+                    className="flex-1 rounded-md p-3"
+                    onPress={handleSubmit(handleUpdate)}
                 >
                     <Button.Title className='text-lg font-semibold'>Edit</Button.Title>    
                 </Button>   
