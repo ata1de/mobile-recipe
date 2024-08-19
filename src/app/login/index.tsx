@@ -5,7 +5,7 @@ import { useAppDispatch, useAppSelector } from "@/store/hooks/hooks";
 import { setUser } from "@/store/slices/userSlice";
 import { colors } from "@/styles/colors";
 import { router } from "expo-router";
-import { ArrowLeft } from "lucide-react-native";
+import { ArrowLeft, Eye, EyeOff } from "lucide-react-native";
 import { useState } from "react";
 import { Alert, Image, Pressable, Text, View } from "react-native";
 
@@ -19,7 +19,13 @@ export default function Login() {
     const [ password, setPassword ] = useState('')
 
     //LOADING
-    const [ loading, setLoading ] = useState(false)
+    const [ loading, setLoading ] = useState(false)//LOADING
+    const [showPassword, setShowPassword ] = useState(false)
+
+    //FUNCTIONS
+    const toggleShowPassword = () => {
+        setShowPassword(!showPassword);
+    };
 
     async function handleLogin() {
         if (email.length === 0 || password.length === 0) {
@@ -66,7 +72,7 @@ export default function Login() {
             </View>
 
             <View className="absolute z-20 bottom-14 self-center w-full bg-white py-7 rounded-tl-[40px] h-3/5">
-                <View className="flex justify-center items-center gap-8 py-8 px-7">
+                <View className="flex justify-center items-center gap-5   px-7">
                     
                     <Text className="text-3xl font-bold">
                         Login
@@ -85,7 +91,20 @@ export default function Login() {
                         value={password}
                         onChangeText={setPassword}
                         placeholder="Write your password"
+                        secureTextEntry={!showPassword}
                         />
+
+                        {   
+                            showPassword ? (
+                                <Pressable onPressIn={toggleShowPassword}>
+                                    <EyeOff color={colors.red[800]} className="w-14 h-14 mr-4"/>
+                                </Pressable>
+                            ) : (
+                                <Pressable onPressIn={toggleShowPassword}>
+                                    <Eye color={colors.red[800]} className="w-14 h-14 mr-4"/>
+                                </Pressable>
+                            )
+                        }
                     </Input>
 
                     <Button 

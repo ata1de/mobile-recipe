@@ -20,7 +20,7 @@ export default function Index() {
 
             const authenticated = await userService.check()
 
-            if(authenticated) {
+            if(authenticated.isAuthenticated) {
                 router.push({
                     pathname: '/home'
                 })   

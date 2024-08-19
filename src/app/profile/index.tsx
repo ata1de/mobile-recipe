@@ -1,6 +1,7 @@
 import Avatar from "@/components/avatar";
 import { Button } from "@/components/button";
 import PersonalInfo from "@/components/personalInfo";
+import { userService } from "@/server/userService";
 import { useAppSelector } from "@/store/hooks/hooks";
 import { colors } from "@/styles/colors";
 import { dayjsTransformDate } from "@/utils/dayjsTransformDate";
@@ -17,6 +18,22 @@ export default function Profile() {
    const userName = user?.name ? FormattedProfile.capitalize(user.name) : '';
    const maskedPassword = user?.password ? FormattedProfile.maskPassword(user.password) : '';
    const data = dayjsTransformDate(user?.createdAt!)
+
+   //FUNCTIONS
+   async function handleLogOut() {
+    try {
+        const response = await userService.logOut()
+
+        if (response.status == 200) {
+            router.push('/')
+        }
+    } catch (error) {
+        if (error instanceof Error) {
+            console.log('error in log out', error.message)
+            throw new Error
+        }
+    }
+   }
 
     return (
         <View className="flex-1 p-7">
@@ -51,6 +68,7 @@ export default function Profile() {
                     <Button
                     variant="secondary"
                     className="flex-1 rounded-md p-3"
+                    onPress={handleLogOut}
                     >
                         <Button.Title className='text-lg font-semibold'>LogOut</Button.Title>    
                     </Button>   
