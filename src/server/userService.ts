@@ -27,14 +27,25 @@ export interface UpdateUserResponse {
 export interface UpdateUserRequest extends Omit<User, 'recipes' | 'createdAt'> {}
 
 async function login({ email, password }: LoginUserAttributes) {
-    const response = await api.post<{ user: User}>('/auth/login', {
-        email,
-        password
-    })
+    try {
+        const response = await api.post('/auth/login', {
+            email,
+            password
+        });
 
-    return {
-        status: response.status,
-        user: response.data.user
+        return {
+            status: response.status,
+            user: response.data.user,
+        };
+    } catch (error: any) {
+        if (error.response) {
+            // Erro retornado pelo backend
+            return {
+                status: error.response.status,
+                message: error.response.data.message,
+            };
+        }
+        throw error;
     }
 }
 

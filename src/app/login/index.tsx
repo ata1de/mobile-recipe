@@ -29,32 +29,31 @@ export default function Login() {
 
     async function handleLogin() {
         if (email.length === 0 || password.length === 0) {
-            return Alert.alert('Error', 'Please fill all fields')
+            return Alert.alert('Error', 'Please fill all fields');
         }
-
-        setLoading(true)
-
+    
+        setLoading(true);
+    
         try {
             const response = await userService.login({
                 email,
                 password
-            })
-
-            if(response.status === 200) {
-                
-                dispatch(setUser(response.user))
+            });
+    
+            if (response.status === 200) {
+                dispatch(setUser(response.user));
                 router.push({
                     pathname: '/home'
-                })
+                });
+            } else if (response.status === 401) {
+                Alert.alert('Error', response.message);
             } else {
-                Alert.alert('Error', 'Invalid email or password')
+                Alert.alert('Error', 'An unknown error occurred');
             }
         } catch (error) {
-            console.log('Error login:', error)
-            Alert.alert('Error', 'An error occurred')
-            }
-        finally {
-            setLoading(false)
+            Alert.alert('Error', 'An error occurred');
+        } finally {
+            setLoading(false);
         }
     }
 

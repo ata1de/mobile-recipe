@@ -1,10 +1,13 @@
+import * as ImagePicker from 'expo-image-picker';
 import { router } from "expo-router";
-import { ArrowLeft, Eye, EyeOff, Lock, Mail, Pencil, UserPen } from "lucide-react-native";
+import { ArrowLeft, Eye, EyeOff, Image, Lock, Mail, Pencil, SwitchCamera, Trash2, UserPen } from "lucide-react-native";
 import { useState } from "react";
 import { Alert, KeyboardAvoidingView, Platform, Pressable, ScrollView, Text, View } from "react-native";
 
 import Avatar from "@/components/avatar";
+import { Button } from "@/components/button";
 import { Input } from "@/components/input";
+import { Loading } from "@/components/loading";
 
 import { CreateUserAttributes, UpdateUserRequest, userService } from "@/server/userService";
 
@@ -12,12 +15,12 @@ import { useAppDispatch, useAppSelector } from "@/store/hooks/hooks";
 
 import { colors } from "@/styles/colors";
 
-import { Button } from "@/components/button";
-import { Loading } from "@/components/loading";
+import { Modal } from "@/components/modal";
 import { setUser } from "@/store/slices/userSlice";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Controller, useForm } from "react-hook-form";
 import * as yup from 'yup';
+
 
 const validationSchema = yup.object().shape({
     email: yup.string().email().required(),
@@ -47,13 +50,22 @@ function errorMessage(formIsValid: any) {
     }
 }
 
+function urlImagePlatform(image: string) {
+    if (Platform.OS === 'ios') {
+        return image.replace('file://', 'ph:/');
+    }
+
+    return image;
+}
+
 export default function EditProfile() {
     //REDUX
     const dispatch = useAppDispatch()
     const user = useAppSelector((state) => state.user.user)
 
     //DATA
-    const [password, setPassword] = useState('');
+    const [ image, setImage ] = useState<string>()
+    const [ modalImage, setModalImage ] = useState(false)
 
     //FORM
     const { control, handleSubmit, formState } = useForm({
@@ -76,6 +88,7 @@ export default function EditProfile() {
     };
 
     async function handleUpdate(data: CreateUserAttributes) {
+        errorMessage(formState);
         try {
             setUpdateLoading(true);
     
@@ -138,6 +151,62 @@ export default function EditProfile() {
         )
     }
 
+    async function uploadImage(mode='camera') {
+        try {
+            if(mode === 'gallery') {
+                await ImagePicker.requestMediaLibraryPermissionsAsync()
+                let resultGallery = await ImagePicker.launchImageLibraryAsync({
+                    mediaTypes: ImagePicker.MediaTypeOptions.Images,
+                    allowsEditing: true,
+                    aspect: [1, 1],
+                    quality: 1,
+                })
+
+                if (!resultGallery.canceled) {
+                    // const imageUrl = urlImagePlatform(resultGallery.assets[0].uri)
+                    // await saveImage(imageUrl)
+                    await saveImage(resultGallery.assets[0].uri) 
+            }} else if (mode === 'remove') {
+                setImage('')
+            } else {
+                console.log('camera')
+                await ImagePicker.requestCameraPermissionsAsync()
+    
+                let result = await ImagePicker.launchCameraAsync({
+                    cameraType: ImagePicker.CameraType.front,
+                    allowsEditing: true,
+                    aspect: [1, 1],
+                    quality: 1,
+                })
+    
+                if (!result.canceled) {
+                    // const imageUrl = urlImagePlatform(result.assets[0].uri)
+                    // await saveImage(imageUrl)
+                    await saveImage(result.assets[0].uri)
+    
+                }
+            }
+        } catch (error) {
+            if (error instanceof Error) {
+                Alert.alert('Error uploading image', error.message)
+            }
+            setModalImage(false)
+
+        }
+    }
+
+    async function saveImage(image: string) {
+        try {
+            setImage(image)
+            setModalImage(false)
+        } catch (error) {
+            if (error instanceof Error) {
+                Alert.alert('Error', error.message)
+            }
+            setModalImage(false)
+        }
+    }
+
     return (
         <KeyboardAvoidingView 
         className="flex-1 p-7"
@@ -149,7 +218,10 @@ export default function EditProfile() {
                     <ArrowLeft color={colors.red[800]} className="w-14 h-14 m-4"/>
                 </Pressable>
 
-                <Avatar />
+                <Pressable onPressIn={() => setModalImage(true)}>
+                    <Avatar source={image} />
+                </Pressable>
+
             </View>
 
             <ScrollView className="flex-1 mt-6">
@@ -237,6 +309,48 @@ export default function EditProfile() {
                     <Button.Title className='text-lg font-semibold'>Edit</Button.Title>    
                 </Button>   
             </ScrollView>
+
+            <Modal
+            title="Upload Image"
+            onClose={() => setModalImage(false)}
+            visible={modalImage}
+            subtitle="Upload your profile image"
+            >
+                <View className='flex-1 flex-row items-center justify-center gap-3 mt-5'>
+                    <Button
+                    variant="secondary"
+                    onPress={() => uploadImage()}
+                    className='rounded-lg p-5 flex-col items-center justify-center gap-3 flex-1'
+                    >
+                        <SwitchCamera color={colors.red[200]} className="w-16 h-16"/>
+
+                        <Button.Title>Camera</Button.Title>
+                    </Button>
+                    <Button
+                    variant="secondary"
+                    onPress={() => uploadImage('gallery')}
+                    className='rounded-lg p-5 flex-col items-center justify-center gap-3 flex-1'
+
+                    >
+                        <Image color={colors.red[200]} className="w-16 h-16"/>
+
+                        <Button.Title>Gallery</Button.Title>
+
+                    </Button>
+                    <Button
+                    variant="secondary"
+                    onPress={() => uploadImage('remove')}
+                    className='rounded-lg p-5 flex-col items-center justify-center gap-3 flex-1'
+
+                    >
+                        <Trash2 color={colors.red[200]} className="w-16 h-16"/>
+
+                        <Button.Title>Remove</Button.Title>
+
+                    </Button>
+                </View>
+
+            </Modal>
 
         </KeyboardAvoidingView >
     
