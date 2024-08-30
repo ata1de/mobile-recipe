@@ -23,8 +23,10 @@ export default function Info() {
                         <FlatList 
                         data={recentViewer.slice(0, 5)} 
                         horizontal
-                        renderItem={({ item }) => <RecommendationRecipe {...item} />}
                         contentContainerClassName="gap-3 flex-row pb-3"
+                        renderItem={({ item, index }) => (
+                            <RecommendationRecipe recipe={item} index={index}  />
+                        )}
                         />
                     )
                 }

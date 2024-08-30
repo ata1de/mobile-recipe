@@ -105,8 +105,8 @@ export default function Main() {
                     data={recentRecipes}
                     horizontal
                     contentContainerClassName="flex-row gap-3 mt-4 flex-row justify-start"
-                    renderItem={({ item }) => (
-                        <RecommendationRecipe {...item} />
+                    renderItem={({ item, index }) => (
+                        <RecommendationRecipe recipe={item} index={index}  />
                     )}
                 />
             </ScrollView>

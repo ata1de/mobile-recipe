@@ -69,21 +69,25 @@ export default function Category() {
                     )}
                 />
             </View>
+
+            <View className="flex-1 grow">
+                {
+                    recipeByCategory.length == 0 ? (
+                        <Text className="text-red-700 font-regular text-base mt-2 mb-6 text-center">
+                            No recipes found in this category.
+                        </Text>) : (
+                            <FlatList
+                            data={recipeByCategory}
+                            contentContainerClassName="h-full flex-wrap w-full gap-9 grow mt-4 flex-row justify-center items-center"
+                            showsVerticalScrollIndicator={false}
+                            renderItem={({ item, index }) => (
+                                <RecommendationRecipe recipe={item} index={index} />
+                            )}
+                        />
+                        )
+                }
+            </View>
                 
-            {
-                recipeByCategory.length == 0 ? (
-                    <Text className="text-red-700 font-regular text-base mt-2 mb-6 text-center">
-                        No recipes found in this category.
-                    </Text>) : (
-                        <FlatList
-                        data={recipeByCategory}
-                        contentContainerClassName="h-full flex-wrap w-full gap-9 grow mt-4 flex-row justify-center items-center"
-                        renderItem={({ item }) => (
-                            <RecommendationRecipe {...item} />
-                        )}
-                    />
-                    )
-            }
             
         </View>
     )
