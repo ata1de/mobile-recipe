@@ -63,14 +63,14 @@ export default function Index() {
                                 <Button 
                                 variant='secondary'
                                 className='flex-1 rounded-full p-5'
-                                onPress={() => router.push({pathname: '/login' as any})}
+                                onPress={() => router.push('/login')}
                                 
                                 >
                                     <Button.Title className='text-lg font-bold'>Login</Button.Title>
                                 </Button>
                                 <Button 
                                 className='flex-1 rounded-full p-5' 
-                                onPress={() => router.push({pathname: '/register' as any})}
+                                onPress={() => router.push('/register')}
                                 >
                                     <Button.Title className='text-lg font-bold'>Register</Button.Title>
                                 </Button>

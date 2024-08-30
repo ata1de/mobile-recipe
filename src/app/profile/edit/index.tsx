@@ -71,9 +71,9 @@ export default function EditProfile() {
     const { control, handleSubmit, formState } = useForm({
         resolver: yupResolver(validationSchema),
         defaultValues: {
-            name: '',
-            email: '',
-            password: '',
+            name: user?.name!,
+            email: user?.email!,
+            password: user?.password!,
         }
         
     })
@@ -88,7 +88,6 @@ export default function EditProfile() {
     };
 
     async function handleUpdate(data: CreateUserAttributes) {
-        errorMessage(formState);
         try {
             setUpdateLoading(true);
     
@@ -121,6 +120,11 @@ export default function EditProfile() {
         }
     }
 
+    const onSubmit = handleSubmit(
+        async (data) => handleUpdate(data),
+        (errors) => errorMessage({ isValid: false, errors })
+    );
+
     async function saveUser(data: UpdateUserRequest) {
         try {
             const response = await userService.update(data)
@@ -143,12 +147,6 @@ export default function EditProfile() {
             }
             
         }
-    }
-
-    if (updateLoading) {
-        return (
-            <Loading />
-        )
     }
 
     async function uploadImage(mode='camera') {
@@ -207,6 +205,11 @@ export default function EditProfile() {
         }
     }
 
+    if (updateLoading) {
+        return (
+            <Loading />
+        )
+    }
     return (
         <KeyboardAvoidingView 
         className="flex-1 p-7"
@@ -225,7 +228,7 @@ export default function EditProfile() {
             </View>
 
             <ScrollView className="flex-1 mt-6">
-                <View className="my-4 gap-4">
+                <View className="my-5 gap-4">
                     <View className="flex-row justify-between items-center">
                             <Text className="text-lg font-semibold text-red-950">Edit Profile</Text>
 
@@ -304,7 +307,7 @@ export default function EditProfile() {
                 <Button
                     variant="secondary"
                     className="flex-1 rounded-md p-3"
-                    onPress={handleSubmit(handleUpdate)}
+                    onPress={onSubmit}
                 >
                     <Button.Title className='text-lg font-semibold'>Edit</Button.Title>    
                 </Button>   

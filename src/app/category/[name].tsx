@@ -42,7 +42,7 @@ export default function Category() {
     return (
         <View className="flex-1">
             <View className="justify-center items-start mt-8 p-7">
-                <Pressable onPress={() => router.back()} className="bg-red-50 z-10 rounded-full flex justify-center items-center p-2">
+                <Pressable onPress={() => router.push('/')} className="bg-red-50 z-10 rounded-full flex justify-center items-center p-2">
                     <ArrowLeft size={24} color={colors.red[950]} />
                 </Pressable>
 
@@ -54,7 +54,7 @@ export default function Category() {
                     renderItem={({ item }) => (
                         <Pressable 
                         onPress={() => {
-                            router.navigate(`/category/${item.name}` as any)
+                            router.push(`/category/${item.name}`)	
                             setActiveCategory(item.name)
                         }} 
                         className={`flex-col p-3 gap-2 border border-red-100 justify-center items-center w-[90px] max-h-[100px] rounded-lg ${activeCategory === item.name && 'bg-red-500'}`}
@@ -75,9 +75,9 @@ export default function Category() {
                     <Text className="text-red-700 font-regular text-base mt-2 mb-6 text-center">
                         No recipes found in this category.
                     </Text>) : (
-                        <FlatList 
+                        <FlatList
                         data={recipeByCategory}
-                        contentContainerClassName="flex-wrap w-full flex-1 gap-3 mt-4 flex-row justify-center items-center"
+                        contentContainerClassName="h-full flex-wrap w-full gap-9 grow mt-4 flex-row justify-center items-center"
                         renderItem={({ item }) => (
                             <RecommendationRecipe {...item} />
                         )}

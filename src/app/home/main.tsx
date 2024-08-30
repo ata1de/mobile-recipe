@@ -41,10 +41,7 @@ export default function Main() {
             }
             
             // Navegar para a nova página
-            router.push({
-                pathname: `/search/${searchName}` as any,  // Cast para "any" ou "string"
-            });
-            
+            router.push(`/search/${searchName}`)
             
         } catch (error) {
             console.log('Error in search', error)
@@ -68,8 +65,8 @@ export default function Main() {
                         <Text className="text-2xl font-bold leading-7 text-red-950">What would you like to cook today?</Text>
                     </View>
 
-                    <Pressable onPress={() => router.navigate('/profile' as any)}>
-                        <Image source={require('../../../assets/favicon.png')} className="rounded-full w-16 h-16" />
+                    <Pressable onPress={() => router.push('/profile')}>
+                        <Image source={require('../../../assets/images/favicon.png')} className="rounded-full w-16 h-16" />
                     </Pressable>
 
                 </View>

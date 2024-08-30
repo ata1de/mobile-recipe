@@ -65,7 +65,7 @@ export default function Home() {
             description: '', // Valor padrão para o campo "description"
             time: '', // Valor padrão para o campo "time"
             difficulty: 'Easy', // Valor padrão para o campo "difficulty"
-            category: 'Lunch', // Valor padrão para o campo "category"
+            category: 'Breakfast', // Valor padrão para o campo "category"
             calories: '', // Valor padrão para o campo "calories"
             imgUrl: '', // Valor padrão para o campo "imgUrl"
         }
@@ -206,27 +206,21 @@ export default function Home() {
                                 )}
                             />
                         </Input>
-                        <View className="flex-row flex-1 items-center justify-center rounded-lg py-3.5 border-red-600 border">
+                        <Input className="flex-1">
                             <Controller
                                 control={control}
-                                name="difficulty"
-                                render={({ field: { onChange, value } }) => (
-                                    <RNPickerSelect
-                                        value={value}
-                                        activeItemStyle={{ backgroundColor: colors.red[950] }}
-                                        dropdownItemStyle={{ backgroundColor: colors.red[200] }}
-                                        darkTheme
-                                        style={{ inputAndroid: { color: colors.red[950] }, inputIOS: { color: colors.red[950] }}}
-                                        onValueChange={onChange}
-                                        items={[
-                                            { label: 'Easy', value: 'Easy' },
-                                            { label: 'Medium', value: 'Medium' },
-                                            { label: 'Hard', value: 'Hard' },
-                                        ]}
+                                name="calories"
+                                render={({ field: { onChange, onBlur, value } }) => (
+                                    <Input.Field
+                                        value={value.toLocaleString()}
+                                        onChangeText={onChange}
+                                        onBlur={onBlur}
+                                        placeholder="Write the calories"
+                                        
                                     />
                                 )}
                             />
-                        </View>
+                        </Input>
                     </View>
                     <View className="flex-row items-center justify-center gap-2">
                         <View className="flex-row flex-1 items-center justify-center rounded-lg py-3.5 border-red-600 border">
@@ -252,21 +246,27 @@ export default function Home() {
                                 )}
                             />
                         </View>
-                        <Input className="flex-1">
+                        <View className="flex-row flex-1 items-center justify-center rounded-lg py-3.5 border-red-600 border">
                             <Controller
                                 control={control}
-                                name="calories"
-                                render={({ field: { onChange, onBlur, value } }) => (
-                                    <Input.Field
-                                        value={value.toLocaleString()}
-                                        onChangeText={onChange}
-                                        onBlur={onBlur}
-                                        placeholder="Write the calories"
-                                        
+                                name="difficulty"
+                                render={({ field: { onChange, value } }) => (
+                                    <RNPickerSelect
+                                        value={value}
+                                        activeItemStyle={{ backgroundColor: colors.red[950] }}
+                                        dropdownItemStyle={{ backgroundColor: colors.red[200] }}
+                                        darkTheme
+                                        style={{ inputAndroid: { color: colors.red[950] }, inputIOS: { color: colors.red[950] }}}
+                                        onValueChange={onChange}
+                                        items={[
+                                            { label: 'Easy', value: 'Easy' },
+                                            { label: 'Medium', value: 'Medium' },
+                                            { label: 'Hard', value: 'Hard' },
+                                        ]}
                                     />
                                 )}
                             />
-                        </Input>
+                        </View>
                     </View>
                     <Input>
                         <Controller
